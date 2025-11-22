@@ -215,6 +215,39 @@ def is_deposit_valid(param_deposit_value) -> bool:
     return param_deposit_value > 0
 
 
+def build_bank_statement(param_withdraw_money, param_account_balance, param_currency_identifier)-> str:
+    """
+    Generates text describing the customer's banking transactions.
+
+    Args:
+        param_withdraw_money (str): Description of the customer's withdrawal transaction.
+        param_account_balance (float): Current balance of the customer's account.
+        param_currency_identifier (str): A monetary identifier to link to the customer's bank transaction records.
+
+    Returns:
+        str: Returns text describing the customer's banking transactions.
+    """ 
+    
+    TOP_BORDER_CHARACTER = "="
+    ROW_LENGTH_DEFAULT = 80
+    HEADER_TITLE = " Withdraw Money "
+    BOTTOM_BORDER_CHARACTER = "="
+    EMPTY_STRING = ""
+    MESSAGE_DEFAULT_TO_NO_TRANSACTION = "No transactions were carried out."
+
+    top_border = HEADER_TITLE.center(ROW_LENGTH_DEFAULT, TOP_BORDER_CHARACTER)
+    bottom_border = EMPTY_STRING.center(ROW_LENGTH_DEFAULT, BOTTOM_BORDER_CHARACTER)
+    records_already_made = f"{"No transactions were carried out." if not param_withdraw_money else param_withdraw_money}"
+    current_record = f"Account balance: {param_currency_identifier} {param_account_balance:.2f}"
+
+    content = f"{top_border}"
+    content += f"\n{records_already_made}"
+    content += f"\n{current_record}"
+    content += f"\n{bottom_border}"
+
+    return content
+
+
 ## Main rotine
 while True:
 
@@ -244,10 +277,8 @@ while True:
         amount_of_withdraws = result["amount_of_withdraws"]
 
     elif option == "s":
-        print("\n================ withdraw_money ================")
-        print("No transactions were carried out." if not withdraw_money else withdraw_money)
-        print(f"\nAccount balance: {CURRENCY_IDENTIFIER} {account_balance:.2f}")
-        print("==========================================")
+        bank_statement = build_bank_statement(withdraw_money,param_currency_identifier= CURRENCY_IDENTIFIER, param_account_balance=account_balance)
+        print(bank_statement)
 
     elif option == "e":
         break
