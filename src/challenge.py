@@ -36,7 +36,8 @@ type Withdraw_Result = {
 ## Functions
 
 def make_withdraw(*, param_account_balance, param_limit_withdrawals, param_amount_of_withdraws, param_withdraw_money) -> Withdraw_Result:
-    """This function make a withdraw in customer's back account.
+    """
+    This function make a withdraw in customer's back account.
 
     Args:
         param_account_balance (float, keyword only): Current balance of the customer's account.
