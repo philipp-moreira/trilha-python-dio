@@ -33,6 +33,12 @@ type Withdraw_Result = {
     "amount_of_withdraws":int
 }
 
+type Deposit_Result = {
+    "account_balance":float, 
+    "withdraw_money":str,
+    "error_message" :str
+}
+
 ## Functions
 
 def make_withdraw(*, param_account_balance, param_limit_withdrawals, param_amount_of_withdraws, param_withdraw_money) -> Withdraw_Result:
@@ -168,6 +174,46 @@ def is_value_withdraw_greater_than_zero(param_value_withdraw)-> bool:
     return param_value_withdraw > 0
 
 
+def make_deposit(param_account_balance, param_withdraw_money, /) -> Deposit_Result:
+    """
+    This function make a deposit in customer's back account.
+
+    Args:
+        param_account_balance (float, keyword only): Current balance of the customer's account.
+        param_withdraw_money (str, keyword only): Description of the customer's withdrawal transaction.
+
+    Returns:
+        Deposit_Result: Describes the important information needed during a customer's withdrawal transaction.
+    """ 
+    value_input = float(input("Please provide the deposit amount: "))
+
+    account_balance = param_account_balance
+    withdraw_money = param_withdraw_money
+    error_message = ""
+
+    if is_deposit_valid(value_input):
+        account_balance += value_input
+        withdraw_money += f"Deposit: {CURRENCY_IDENTIFIER} {value_input:.2f}\n"
+
+    else:
+        error_message = "The operation failed! The value entered is invalid."
+
+    return {"account_balance": account_balance, "withdraw_money": withdraw_money, "error_message": error_message}
+
+
+def is_deposit_valid(param_deposit_value) -> bool:
+    """
+    Check if the deposit transaction amount is greater than 0 (zero).
+
+    Args:
+        param_deposit_value (int): Value of the deposit transaction.
+
+    Returns:
+        bool: If the deposit transaction value is greater than 0 (zero), True will be returned.
+    """ 
+
+    return param_deposit_value > 0
+
 
 ## Main rotine
 while True:
@@ -175,14 +221,13 @@ while True:
     option = input(MENU)
 
     if option == "d":
-        value = float(input("Please provide the deposit amount: "))
+        result = make_deposit(account_balance, withdraw_money)
 
-        if value > 0:
-            account_balance += value
-            withdraw_money += f"Deposit: {CURRENCY_IDENTIFIER} {value:.2f}\n"
+        if not result or len(result["error_message"]) > 1:
+            print(result["error_message"])
 
-        else:
-            print("The operation failed! The value entered is invalid.")
+        account_balance = result["account_balance"]
+        withdraw_money = result["withdraw_money"]
 
     elif option == "w":
         result = make_withdraw(
